@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 
 var asyncTesting = require('./async_testing'),
-    path = require('path');
+    path = require('path'),
+    callback;
 
 if( process.ARGV.length < 3 ) {
   var paths = [process.cwd()];
@@ -9,7 +10,10 @@ if( process.ARGV.length < 3 ) {
 else {
   var paths = [];
   process.ARGV.slice(2).forEach(function(dir) {
-    if( dir.charAt(0) === '/' ) {
+    if (dir == '-c' || dir == '--coverage') {
+        callback = asyncTesting.printCoverage;
+    }
+    else if( dir.charAt(0) === '/' ) {
       paths.push(dir);
     }
     else {
@@ -18,4 +22,4 @@ else {
   });
 }
 
-asyncTesting.runSuitesInPaths(paths);
+asyncTesting.runSuitesInPaths(paths, callback);
