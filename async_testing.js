@@ -360,7 +360,7 @@ exports.runSuites = function(module, callback) {
   runNextSuite();
 };
 
-exports.runSuitesInPaths = function(paths) {
+exports.runSuitesInPaths = function(paths, callback) {
   var testFiles = [];
   var stats = {
     numSuites: 0,
@@ -413,6 +413,7 @@ exports.runSuitesInPaths = function(paths) {
         output += ': ' + stats.numFailed + ' had failures';
       }
       sys.error(output);
+      if (callback) { callback(); }
       return;
     }
     var file = testFiles.shift();
