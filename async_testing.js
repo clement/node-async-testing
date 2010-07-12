@@ -423,3 +423,91 @@ exports.runSuitesInPaths = function(paths) {
   }
 };
 
+exports.getCoverage = function () {
+    if (_$jscoverage) {
+        var coverage = _$jscoverage;
+        coverage.files = Object.keys(coverage);
+        coverage.covered = coverage.SLOC = coverage.hits = 0;
+
+        for (var i in coverage.files) {
+            var file = coverage[coverage.files[i]], hits = file.filter(Object);
+            coverage.SLOC += (file.SLOC = hits.length);
+            coverage.hits += (file.hits = hits.filter(Boolean).length);
+            file.covered = (file.hits * 100 / file.SLOC);
+            file.ranges = [];
+
+            // Calculating missing ranges
+            for (var j=0; j<file.length; j++) {
+                if (file[j] == 0) {
+                    var start = j, end = j;
+                    for (j++; j<file.length && !file[j]; end++, j++) {}
+
+                    if (start != end) {
+                        file.ranges.push(''+start+'-'+end);
+                    }
+                    else {
+                        file.ranges.push(''+start);
+                    }
+                }
+            }
+        }
+        coverage.covered = (coverage.hits * 100 / coverage.SLOC);
+
+        return coverage;
+    }
+};
+
+exports.printCoverage = function (coverage) {
+    coverage = coverage || exports.getCoverage();
+    if (!coverage) {
+        return;
+    }
+
+    function pad(obj, width, right, padChar) {
+        padChar = padChar || ' ';
+        var str = obj.toString(),
+            pad = '';
+
+        for (var padLen = width - str.length; padLen > 0; padLen --) {
+            pad += padChar;
+        }
+
+        if (right) {
+            return pad + str;
+        }
+        else {
+            return str + pad;
+        }
+    }
+
+    var max_length = Math.max.apply(Math, coverage.files.map(function (f) { return f.length; }));
+    sys.puts('+-' + pad('', max_length, true, '-') + '-+--------+----------+----------------------+');
+    sys.puts('| ' + pad('filename', max_length)    + ' |  SLOC  | Coverage | Missed line ranges   |');
+    sys.puts('+-' + pad('', max_length, true, '-') + '-+--------+----------+----------------------+');
+
+    for (var i in coverage.files) {
+        var filename = coverage.files[i],
+            file = coverage[filename];
+
+        sys.print('| ' + pad(filename, max_length) + ' | ' + pad(file.SLOC, 6, true) + ' | ' +
+                         pad(file.covered.toFixed(2)+'%', 8, true) + ' | ');
+        
+        // Display ranges,
+        // grouping them by string of 20 characters long max
+        var ranges = [[]];
+        for (var j = 0; j < file.ranges.length; j ++) {
+            if (ranges[ranges.length-1].join(',').length + file.ranges[j].length +1 <= 20) {
+                ranges[ranges.length-1].push(file.ranges[j]);
+            }
+            else {
+                ranges.push([file.ranges[j]]);
+            }
+        }
+
+        sys.puts(pad(ranges[0].join(','), 20, true) + ' |');
+        for (j = 1; j < ranges.length; j++) {
+            sys.puts('| ' + pad('', max_length) + ' |        |         | '+pad(ranges[j].join(','), 20, true)+' |');
+        }
+    }
+    sys.puts('+-' + pad('', max_length, true, '-') + '-+--------+----------+----------------------+');
+};
