@@ -1,4 +1,4 @@
-var TestSuite = require('../async_testing').TestSuite;
+var TestSuite = require('node-async-testing').TestSuite;
 
 exports['README examples suite'] = (new TestSuite())
   .setup(function(callback) {
@@ -51,5 +51,5 @@ exports['README examples suite'] = (new TestSuite())
   });
 
 if (module === require.main) {
-  require('../async_testing').runSuites(exports);
+  require('node-async-testing').runSuites(exports);
 }

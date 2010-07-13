@@ -17,9 +17,9 @@ Some goals of the project:
 + Not another Behavior Driven Development testing framework. I don't
   like specifications and what not. They only add verbosity. 
   
-    test('X does Y',function() {
-      //test goes here
-    });
+      test('X does Y',function() {
+        //test goes here
+      });
 
   is good enough for me.
 + Make no assumptions about the code being tested.
@@ -47,7 +47,7 @@ This module aims to address that by making sure
 
 Tests are added to a TestSuite object.
     
-    var TestSuite = require('async_testing').TestSuite;
+    var TestSuite = require('node-aync-testing').TestSuite;
 
     var suite = new TestSuite();
     suite.addTests({
@@ -170,7 +170,7 @@ There is also a test runner which can run many TestSuites at once:
       'second suite':  new TestSuite()
     };
 
-    require('async_testing').runSuites(suites);
+    require('node-aync-testing').runSuites(suites);
 
 It is recommended that you export your test suites, so other more capable
 scripts can handle running them. However, it is still convenient to be able to
@@ -180,7 +180,7 @@ run a specific file.  Here's how you can allow both:
     exports['second suite'] = new TestSuite();
 
     if (module === require.main) {
-      require('../async_testing').runSuites(exports);
+      require('node-aync-testing').runSuites(exports);
     }
 
 This way the tests will only be run automatically if the file containing them is
@@ -196,8 +196,12 @@ installed properly and then run:
 Installing
 ----------
 
-To install, the file `async_testing.js` needs to be in your Node path.  The
+To install, the source should be in a folder `node-async-testing` somewhere in your Node path.  The
 easiest place to put it is in `~/.node_libraries`.
+
+You can alternatively install it using [npm](http://github.com/isaacs/npm) :
+
+    npm install node-async-testing
 
 Notes
 -----

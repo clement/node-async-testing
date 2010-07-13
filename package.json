@@ -1,0 +1,9 @@
+{
+    "name": "node-async-testing",
+    "description": "A Node.js test runner for testing asynchronous code",
+    "version": "0.1.0",
+    "author": "Benjamin Thomas <benjamin@benjaminthomas.org>",
+    "main": "./index.js",
+    "bin": {"node-async-test": "./bin/node-async-test"},
+    "engines": {"node": ">= 0.1.91"}
+}

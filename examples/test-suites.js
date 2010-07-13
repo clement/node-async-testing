@@ -1,5 +1,5 @@
 var sys = require('sys');
-var TestSuite = require('../async_testing').TestSuite;
+var TestSuite = require('node-async-testing').TestSuite;
 
 exports['First Suite'] = new TestSuite()
   .addTests({
@@ -87,5 +87,5 @@ exports['Wait Suite'].addTests({
   });
 
 if (module === require.main) {
-  require('../async_testing').runSuites(exports);
+  require('node-async-testing').runSuites(exports);
 }
